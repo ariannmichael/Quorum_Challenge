@@ -1,0 +1,29 @@
+.home-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.home-wrapper {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    width: 22rem;
+}
+
+.home-uploads {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24rem;
+    text-align: center;
+
+    #btn-upload {
+        margin-top: 1rem;
+    }
+}

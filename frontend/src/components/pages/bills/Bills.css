@@ -1,0 +1,22 @@
+.bill-container{
+    margin-top: 3rem;
+}
+
+.bills-wrapper {
+    margin-top: 2rem;
+}
+
+.bill-card {
+    margin-bottom: 1rem;
+}
+
+.bill-card__description {
+    display: flex;
+}
+
+.bill-card__supporters-opposers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 2rem;
+}

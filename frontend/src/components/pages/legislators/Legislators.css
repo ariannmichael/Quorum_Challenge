@@ -1,0 +1,22 @@
+.legislator-container{
+    margin-top: 3rem;
+}
+
+.legislators-wrapper {
+    margin-top: 2rem;
+}
+
+.legislator-card {
+    margin-bottom: 1rem;
+}
+
+.legislator-card__description {
+    display: flex;
+}
+
+.legislator-card__supported-opposed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 2rem;
+}
