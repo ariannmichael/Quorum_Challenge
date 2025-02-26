@@ -7,7 +7,7 @@ class GetBillAnalyticsUseCase:
 
 
     def execute(self):
-        bills = self.bill_repo.get_bill_with_supporter_and_opposer_count()
+        return self.bill_repo.get_bill_with_supporter_and_opposer_count()
 
 
 class ImportBillsFromCSVUseCase:
@@ -16,15 +16,18 @@ class ImportBillsFromCSVUseCase:
 
 
     def execute(self, csv_file):
-        decode_file = csv_file.read().decode('utf-8').splitlines()
-        csv_reader = csv.reader(decode_file)
+        if isinstance(csv_file, str):
+            decoded_file = csv_file.splitlines()
+        else:
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+
+        csv_reader = csv.DictReader(decoded_file)
 
         bill_data = []
         for row in csv_reader:
-            bill_data.append({'id': row[0], 'title': row[1], 'primary_sponsor': row[2]})
-            
-        
-        self.bill_repo.save_bulk(bill_data[1:])
+            bill_data.append({'id': row['id'], 'title': row['title'], 'primary_sponsor': row['sponsor_id']})
+
+        self.bill_repo.save_bulk(bill_data)
 
         return {'message': 'Bill CSV file uploaded successfully'}
 

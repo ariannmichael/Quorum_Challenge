@@ -10,4 +10,3 @@ class BillAnalyticsSerializer(serializers.Serializer):
     bill = BillSerializer()
     supporters = serializers.IntegerField()
     opposers = serializers.IntegerField()
-    primary_sponsor = serializers.IntegerField()

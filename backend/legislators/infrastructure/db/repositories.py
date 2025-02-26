@@ -15,8 +15,8 @@ class LegislatorRepository:
     with connection.cursor() as cursor:
       cursor.execute("""
         SELECT legislator.id, legislator.name,
-        (SELECT COUNT(*) from vote_results as vr WHERE vr.legislator_id = legislator.id AND vr.vote_type = 1) as supported_bills,
-        (SELECT COUNT(*) from vote_results as vr WHERE vr.legislator_id = legislator.id AND vr.vote_type = 2) as opposed_bills,
+        (SELECT COUNT(*) from vote_results_vote_result as vr WHERE vr.legislator_id = legislator.id AND vr.vote_type = 1) as supported_bills,
+        (SELECT COUNT(*) from vote_results_vote_result as vr WHERE vr.legislator_id = legislator.id AND vr.vote_type = 2) as opposed_bills
         FROM legislators_legislator AS legislator
       """)
       rows = cursor.fetchall()

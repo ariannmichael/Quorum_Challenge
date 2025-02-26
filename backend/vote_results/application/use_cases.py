@@ -14,9 +14,8 @@ class ImportVoteResultsUseCase:
 
         vote_results_data = []
         for row in csv_reader:
-            vote_results_data.append({'id': row['id'], 'legislator_id': row['legislator_id'],
-                               'vote_id': row['vote_id'], 'vote_type': row['vote_type']})
+            vote_results_data.append({'id': row['id'], 'legislator_id': row['legislator_id'], 'vote_id': row['vote_id'], 'vote_type': row['vote_type']})
 
-        self.votes_repo.save_bulk(vote_results_data[1:])
+        self.votes_repo.save_bulk(vote_results_data)
 
         return {'message': 'Vote Results CSV file uploaded successfully'}

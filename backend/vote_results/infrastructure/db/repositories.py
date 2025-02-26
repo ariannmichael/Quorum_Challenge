@@ -41,12 +41,15 @@ class VoteResultsRepository:
 
                 batch = []
                 for row in vote_results_data:
-                    if not self.check_legislator_exists(vote_results_data.legislator_id):
-                        print(f"Legislator {vote_results_data.legislator_id} does not exist.")
+                    legislator_id = row.get('legislator_id')
+                    vote_id = row.get('vote_id')
+
+                    if not self.check_legislator_exists(legislator_id):
+                        print(f"Legislator {legislator_id} does not exist.")
                         continue
 
-                    if not self.check_vote_exists(vote_results_data.vote_id):
-                        print(f"Vote {vote_results_data.vote_id} does not exist.")
+                    if not self.check_vote_exists(vote_id):
+                        print(f"Vote {vote_id} does not exist.")
                         continue
 
                     batch.append((row['id'], row['legislator_id'], row['vote_id'], row['vote_type']))
