@@ -6,7 +6,7 @@ class BillSerializer(serializers.Serializer):
     primary_sponsor = serializers.IntegerField()
 
 
-class BillStatsSerializer(serializers.Serializer):
+class BillAnalyticsSerializer(serializers.Serializer):
     bill = BillSerializer()
     supporters = serializers.IntegerField()
     opposers = serializers.IntegerField()

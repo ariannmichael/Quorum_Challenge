@@ -1,7 +1,7 @@
 import csv
 
 
-class GetLegislatorVoteStatsUseCase:
+class GetLegislatorVoteAnalyticsUseCase:
   def __init__(self, legislator_repo):
     self.legislator_repo = legislator_repo
   

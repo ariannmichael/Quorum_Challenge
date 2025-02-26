@@ -5,7 +5,7 @@ class LegislatorSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
 
 
-class LegislatorVoteStatsSerializer(serializers.Serializer):
+class LegislatorVoteAnalyticsSerializer(serializers.Serializer):
     legislator = LegislatorSerializer()
     supported_bills = serializers.IntegerField()
     opposed_bills = serializers.IntegerField()

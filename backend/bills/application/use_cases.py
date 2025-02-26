@@ -1,7 +1,7 @@
 import csv
 
 
-class GetBillStatsUseCase:
+class GetBillAnalyticsUseCase:
     def __init__(self, bill_repo):
         self.bill_repo = bill_repo
 

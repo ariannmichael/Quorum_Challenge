@@ -2,17 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from bills.infrastructure.db.repositories import BillRepository
-from bills.application.use_cases import GetBillStatsUseCase, ImportBillsFromCSVUseCase
-from bills.infrastructure.api.serializers import BillStatsSerializer
+from bills.application.use_cases import GetBillAnalyticsUseCase, ImportBillsFromCSVUseCase
+from bills.infrastructure.api.serializers import BillAnalyticsSerializer
 
 
-class BillStatsAPIView(APIView):
+class BillAnalyticsAPIView(APIView):
     def get(self, request):
         repo = BillRepository()
-        use_case = GetBillStatsUseCase(repo)
-        bill_stats = use_case.execute()
+        use_case = GetBillAnalyticsUseCase(repo)
+        bill_analytics = use_case.execute()
 
-        serializer = BillStatsSerializer(bill_stats, many=True)
+        serializer = BillAnalyticsSerializer(bill_analytics, many=True)
         return Response(serializer.data)
 
 

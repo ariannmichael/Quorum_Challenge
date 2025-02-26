@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import LegislatorVoteStatsView
+from .views import LegislatorVoteAnalyticsView
 
 urlpatterns = [
-    path('stats/', LegislatorVoteStatsView.as_view()),
-    path('import/', LegislatorVoteStatsView.as_view()),
+    path('analytics/', LegislatorVoteAnalyticsView.as_view()),
+    path('import/', LegislatorVoteAnalyticsView.as_view()),
 ]
