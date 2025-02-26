@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:17.3-alpine
+    container_name: quorum_challenge_db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=quorum_db
+      - POSTGRES_PASSWORD=12345678
+    networks:
+      - quorum_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  quorum_network:
+    driver: bridge
