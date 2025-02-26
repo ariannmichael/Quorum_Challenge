@@ -31,11 +31,35 @@ class LegislatorRepository:
       ]
 
   def save_bulk(self, legislators_data):
-    with connection.cursor() as cursor:
-      query = """
+    if not legislators_data:
+      return
+
+    BATCH_SIZE = 1000
+
+    query = """
         INSERT INTO legislators_legislator (id, name)
         VALUES (%s, %s)
-        ON CONFLICT (id) DO NOTHING
-      """
+        ON CONFLICT (id) DO NOTHING;
+    """
 
-    cursor.executemany(query, [(row['id'], row['name']) for row in legislators_data])
+    try:
+      with connection.cursor() as cursor:
+        cursor.execute("BEGIN;")
+
+        batch = []
+        for row in legislators_data:
+          batch.append((row['id'], row['name']))
+
+          if len(batch) >= BATCH_SIZE:
+            cursor.executemany(query, batch)
+            batch.clear()
+
+        if batch:
+          cursor.executemany(query, batch)
+
+        cursor.execute("COMMIT;")
+
+    except Exception as e:
+      with connection.cursor() as cursor:
+        cursor.execute("ROLLBACK;")
+      print(f"Database error: {e}")

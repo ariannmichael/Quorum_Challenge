@@ -19,8 +19,12 @@ class LegislatorVoteStatsView(APIView):
     if 'file' not in request.FILES:
       return Response({'message': 'No file provided'}, status=400)
 
-    csv_file_data = request.FILES['file'].read().decode('utf-8')
+    # csv_file_data = request.FILES['file'].read().decode('utf-8')
+    #
+    # import_legislators_from_csv_task.delay(csv_file_data)
 
-    import_legislators_from_csv_task(csv_file_data)
+    repo = LegislatorRepository()
+    use_case = ImportLegislatorsFromCSVUseCase(repo)
+    result = use_case.execute(request.FILES['file'])
 
-    return Response({'message': 'CSV upload started. Processing in background.'}, status=202)
+    return Response(result, status=201)

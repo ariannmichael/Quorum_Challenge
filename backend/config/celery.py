@@ -1,10 +1,10 @@
 from celery import Celery
-from django.conf import settings
+import os
 
-app = Celery(
-    'backend',
-    broker='redis://localhost:6379/0',
-    backend='redis://localhost:6379/0'
-)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app = Celery('quorum_challenge')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+
+app.autodiscover_tasks()
