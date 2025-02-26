@@ -21,5 +21,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path('api/legislators/', include('legislators.infrastructure.api.urls')),
-    path('api/bills/', include('bills.infrastructure.api.urls'))
+    path('api/bills/', include('bills.infrastructure.api.urls')),
+    path('api/votes/', include('votes.infrastructure.api.urls')),
+    path('api/vote-results/', include('vote_results.infrastructure.api.urls')),
 ]

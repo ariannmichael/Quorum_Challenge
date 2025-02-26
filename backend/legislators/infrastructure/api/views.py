@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from legislators.application.use_cases import GetLegislatorVoteAnalyticsUseCase, ImportLegislatorsFromCSVUseCase
 from legislators.infrastructure.api.serializers import LegislatorVoteAnalyticsSerializer
 from legislators.infrastructure.db.repositories import LegislatorRepository
-from legislators.application.tasks import import_legislators_from_csv_task
+
 
 class LegislatorVoteAnalyticsView(APIView):
   def get(self, request):

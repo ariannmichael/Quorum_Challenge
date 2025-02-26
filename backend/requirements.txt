@@ -3,7 +3,6 @@ asgiref==3.7.2
 async-timeout==5.0.1
 attrs==23.2.0
 billiard==4.2.1
-celery==5.4.0
 certifi==2022.6.15
 charset-normalizer==2.1.1
 click==8.1.8

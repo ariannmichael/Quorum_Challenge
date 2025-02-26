@@ -8,7 +8,7 @@ class LegislatorRepository:
       cursor.execute("SELECT id, name FROM legislators_legislator")
       rows = cursor.fetchall()
 
-    return [Legislator(id=rows[0], name=rows[1]) for rows in rows]
+    return [Legislator(id=row[0], name=row[1]) for row in rows]
 
 
   def get_legislators_with_vote_counts(self):
