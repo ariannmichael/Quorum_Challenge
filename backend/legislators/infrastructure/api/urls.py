@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import LegislatorListView
+from .views import LegislatorVoteStatsView
 
 urlpatterns = [
-    path('legislators/', LegislatorListView.as_view(), name='legislator-list')
+    path('legislators/stats/', LegislatorVoteStatsView.as_view()),
+    path('legislators/import/', LegislatorVoteStatsView.as_view()),
 ]

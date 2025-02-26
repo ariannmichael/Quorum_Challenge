@@ -1,4 +1,4 @@
-#!/Users/ariannmichael/Documents/quorum_challenge/venv/bin/python
+#!/Users/ariannmichael/Documents/quorum_challenge/backend/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
