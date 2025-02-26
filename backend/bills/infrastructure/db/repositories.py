@@ -4,7 +4,7 @@ from bills.domain.models import Bill
 class BillRepository:
     def get_all(self):
         with connection.cursor() as cursor:
-            cursor.execute("SELECT id, title, primary_sponsor FROM bills")
+            cursor.execute("SELECT id, title, primary_sponsor FROM bills_bill")
             rows = cursor.fetchall()
 
         return [Bill(id=rows[0], title=rows[1], primary_sponsor=rows[2]) for rows in rows]
