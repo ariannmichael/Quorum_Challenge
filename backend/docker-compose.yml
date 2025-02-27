@@ -1,13 +1,16 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:17.3-alpine
     container_name: quorum_challenge_db
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_DB=quorum_db
-      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_USER=quorum_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-$(openssl rand -hex 16)}
     networks:
       - quorum_network
     volumes:

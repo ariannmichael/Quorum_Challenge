@@ -33,31 +33,34 @@ const Uploads: React.FC = () => {
     setFiles((prevFiles) => ({ ...prevFiles, [key]: file }));
   };
 
-  const handleUpload = () => {
-    const promises: Promise<any>[] = [];
-
-    if (files.bills) {
-      promises.push(uploadBills(files.bills));
-    }
-    if (files.legislators) {
-      promises.push(uploadLegislators(files.legislators));
-    }
-    if (files.votes) {
-      promises.push(uploadVotes(files.votes));
-    }
-    if (files.voteResults) {
-      promises.push(uploadVoteResults(files.voteResults));
-    }
-
+  const handleUpload = async () => {
     setIsLoading(true);
-    Promise.all(promises)
-      .then(() => setIsLoading(false));
-  }
+  
+    try {
+      if (files.bills) {
+        await uploadBills(files.bills);
+      }
+      if (files.legislators) {
+        await uploadLegislators(files.legislators);
+      }
+      if (files.votes) {
+        await uploadVotes(files.votes);
+      }
+      if (files.voteResults) {
+        await uploadVoteResults(files.voteResults);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
   const uploadSections = [
-    { key: "votes", title: "Select Votes File" },
-    { key: "legislators", title: "Select Legislators File" },
     { key: "bills", title: "Select Bills File" },
+    { key: "legislators", title: "Select Legislators File" },
+    { key: "votes", title: "Select Votes File" },
     { key: "voteResults", title: "Select Vote Results File" }
   ];
 
