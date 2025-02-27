@@ -1,7 +1,7 @@
 import React from 'react';
 import { LegislatorBills } from '../../../models/LegislatorModels';
-import { getLegislatorsBills } from '../../../services/api';
-import { Container } from 'react-bootstrap';
+import { downloadLegislators, getLegislatorsBills } from '../../../services/api';
+import { Button, Container } from 'react-bootstrap';
 import './Legislators.css';
 import LegislatorCard from './LegislatorCard';
 
@@ -14,9 +14,16 @@ const Legislators: React.FC = () => {
         });
     }, []);
 
+    const handleDownload = () => {
+        downloadLegislators('legislators-support-oppose-count.csv');
+    }
+
     return (
         <Container className='legislator-container'>
-            <h1>Legislators</h1>
+            <div className="legislator-header">
+                <h1>Legislators</h1>
+                <Button onClick={handleDownload}>Download CSV</Button>
+            </div>
             <div className='legislators-wrapper'>
                 {legislatorsBills && legislatorsBills.length === 0 && <h2>No legislators found</h2>}
                 {legislatorsBills?.map((legislatorBill) => (

@@ -55,9 +55,9 @@ const Uploads: React.FC = () => {
   }
 
   const uploadSections = [
-    { key: "bills", title: "Select Bills File" },
-    { key: "legislators", title: "Select Legislators File" },
     { key: "votes", title: "Select Votes File" },
+    { key: "legislators", title: "Select Legislators File" },
+    { key: "bills", title: "Select Bills File" },
     { key: "voteResults", title: "Select Vote Results File" }
   ];
 

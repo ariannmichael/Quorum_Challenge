@@ -1,7 +1,7 @@
 import React from 'react';
 import { BillDetail } from '../../../models/BillModels';
-import { getBillsDetails } from '../../../services/api';
-import { Container } from 'react-bootstrap';
+import { downloadBills, getBillsDetails } from '../../../services/api';
+import { Button, Container } from 'react-bootstrap';
 import './Bills.css';
 import BillCard from './BillCard';
 
@@ -14,9 +14,16 @@ const Bills: React.FC = () => {
         });
     }, []);
 
+    const handleDownload = () => {
+        downloadBills('bills.csv');
+    }
+
     return (
         <Container className='bill-container'>
-            <h1>Bills</h1>
+            <div className="bills-header">
+                <h1>Bills</h1>
+                <Button onClick={handleDownload}>Download CSV</Button>
+            </div>
             <div className='bills-wrapper'>
                 {bills && bills.length === 0 && <h2>No bills found</h2>}
                 {bills?.map((bill) => (
