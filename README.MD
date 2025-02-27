@@ -24,9 +24,13 @@
         ```
         pip install -r requirements.txt
         ```
-    - Run the server:
+    - Run the following command, to start the database:
         ```
-        python manage.py runserver
+        docker-compose up -d
+        ```
+    - Run the migrations:
+        ```
+        python manage.py migrate
         ```
 
 ### Frontend
@@ -36,14 +40,14 @@
         ```
     - Run the server:
         ```
-        npm start
+        npm run dev
         ```
 
 ## Running the Project
 ### Backend
-    - In the root folder, run the following command:
+    - Run the server:
         ```
-        docker-compose up -d
+        python manage.py runserver
         ```
     - Open the browser and go to the following URL:
         ```

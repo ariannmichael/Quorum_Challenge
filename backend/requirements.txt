@@ -23,7 +23,6 @@ idna==3.3
 ipaddress==1.0.22
 kombu==5.4.2
 maxminddb==2.2.0
-mssql-django==1.0rc1
 packaging==24.0
 prompt_toolkit==3.0.50
 protobuf==5.26.0
