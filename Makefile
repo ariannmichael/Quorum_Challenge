@@ -50,9 +50,13 @@ test-backend: ## Run backend tests (local, requires venv)
 	. venv/bin/activate && \
 	python manage.py test
 
-test-frontend: ## Run frontend tests (local, if available)
+test-frontend: ## Run frontend tests (local)
 	@echo "Running frontend tests locally..."
-	@cd frontend && npm test 2>/dev/null || echo "No tests configured"
+	@if [ ! -d "frontend/node_modules" ]; then \
+		echo "Error: Frontend dependencies not installed. Run 'make install-frontend' first."; \
+		exit 1; \
+	fi
+	cd frontend && npm test -- --run
 
 test-docker: test-backend-docker test-frontend-docker ## Run all tests in Docker
 
@@ -64,17 +68,23 @@ test-backend-docker: ## Run backend tests in Docker
 	fi
 	docker-compose exec backend python manage.py test
 
-test-frontend-docker: ## Run frontend tests in Docker (if available)
+test-frontend-docker: ## Run frontend tests in Docker
 	@echo "Running frontend tests in Docker..."
 	@if ! docker-compose ps | grep -q "quorum_challenge_frontend.*Up"; then \
 		echo "Error: Frontend container is not running. Start it with 'make docker-up' first."; \
 		exit 1; \
 	fi
-	@docker-compose exec frontend npm test 2>/dev/null || echo "Note: Frontend tests are not configured. Add a test framework (e.g., Vitest, Jest) to run tests."
+	@echo "Ensuring frontend dependencies are installed..."
+	@docker-compose exec frontend npm install --silent 2>/dev/null || true
+	docker-compose exec frontend npm test -- --run
 
 docker-build: ## Build Docker images
 	@echo "Building Docker images..."
 	docker-compose build
+
+docker-build-frontend: ## Rebuild frontend Docker image (useful after adding dependencies)
+	@echo "Rebuilding frontend Docker image..."
+	docker-compose build frontend
 
 docker-up: ## Start all services with Docker
 	@echo "Starting Docker services..."
