@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { downloadCSV } from '../utils/downloadCSV';
 
-
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Get API URL from environment variable, ensuring it includes /api
+let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Ensure it ends with /api
+if (!apiUrl.endsWith('/api')) {
+  apiUrl = apiUrl.endsWith('/') ? `${apiUrl}api` : `${apiUrl}/api`;
+}
+const baseURL = apiUrl;
 
 export const getLegislatorsBills = async () => {
     const url = `${baseURL}/legislators/analytics/`;
