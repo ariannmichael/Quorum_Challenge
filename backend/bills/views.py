@@ -15,19 +15,22 @@ class BillAnalyticsAPIView(APIView):
                 SELECT bill.id, bill.title,
                     COUNT(CASE WHEN vr.vote_type = 1 THEN 1 END) AS supporters,
                     COUNT(CASE WHEN vr.vote_type = 2 THEN 1 END) AS opposers,
+                    COALESCE(legislator.name, 'Unknown') as primary_sponsor_name,
                     bill.primary_sponsor
                 FROM bills_bill as bill
                 LEFT JOIN votes_vote AS v ON v.bill_id = bill.id
                 LEFT JOIN vote_results_vote_result AS vr ON vr.vote_id = v.id
-                GROUP BY bill.id, bill.title, bill.primary_sponsor;
+                LEFT JOIN legislators_legislator AS legislator ON legislator.id = bill.primary_sponsor
+                GROUP BY bill.id, bill.title, legislator.name, bill.primary_sponsor;
             """)
             rows = cursor.fetchall()
 
             bill_analytics = [
                 {
-                    "bill": {"id": row[0], "title": row[1], "primary_sponsor": row[4]},
-                    "supporters": row[2],
-                    "opposers": row[3],
+                    "bill": {"id": row[0], "title": row[1], "primary_sponsor": row[5]},
+                    "supporters": row[2] if row[2] is not None else 0,
+                    "opposers": row[3] if row[3] is not None else 0,
+                    "primary_sponsor_name": row[4] if row[4] else "Unknown"
                 }
                 for row in rows
             ]
@@ -77,19 +80,22 @@ class BillAnalyticsExportCSV(APIView):
                 SELECT bill.id, bill.title,
                     COUNT(CASE WHEN vr.vote_type = 1 THEN 1 END) AS supporters,
                     COUNT(CASE WHEN vr.vote_type = 2 THEN 1 END) AS opposers,
-                    bill.primary_sponsor
+                    COALESCE(legislator.name, 'Unknown') as primary_sponsor_name
                 FROM bills_bill as bill
                 LEFT JOIN votes_vote AS v ON v.bill_id = bill.id
                 LEFT JOIN vote_results_vote_result AS vr ON vr.vote_id = v.id
-                GROUP BY bill.id, bill.title, bill.primary_sponsor;
+                LEFT JOIN legislators_legislator AS legislator ON legislator.id = bill.primary_sponsor
+                GROUP BY bill.id, bill.title, legislator.name;
             """)
             rows = cursor.fetchall()
 
             bill_analytics = [
                 {
-                    "bill": {"id": row[0], "title": row[1], "primary_sponsor": row[4]},
-                    "supporters": row[2],
-                    "opposers": row[3],
+                    "id": row[0],
+                    "title": row[1],
+                    "supporter_count": row[2] if row[2] is not None else 0,
+                    "opposer_count": row[3] if row[3] is not None else 0,
+                    "primary_sponsor": row[4] if row[4] else "Unknown"
                 }
                 for row in rows
             ]
@@ -100,8 +106,14 @@ class BillAnalyticsExportCSV(APIView):
         writer = csv.writer(response)
         writer.writerow(["id", "title", "supporter_count", "opposer_count", "primary_sponsor"])
 
-        for row in bill_analytics:
-            writer.writerow((row["bill"]["id"], row["bill"]["title"], row["supporters"], row["opposers"], row["bill"]["primary_sponsor"]))
+        for bill in bill_analytics:
+            writer.writerow((
+                bill["id"],
+                bill["title"],
+                bill["supporter_count"],
+                bill["opposer_count"],
+                bill["primary_sponsor"]
+            ))
 
         return response
 

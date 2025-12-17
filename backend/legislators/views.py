@@ -75,9 +75,10 @@ class LegislatorAnalyticsExportCSV(APIView):
 
             legislators = [
                 {
-                    "legislator": {"id": row[0], "name": row[1]},
-                    "supported_bills": row[2],
-                    "opposed_bills": row[3]
+                    "id": row[0],
+                    "name": row[1],
+                    "num_supported_bills": row[2] if row[2] is not None else 0,
+                    "num_opposed_bills": row[3] if row[3] is not None else 0
                 }
                 for row in rows
             ]
@@ -88,8 +89,13 @@ class LegislatorAnalyticsExportCSV(APIView):
         writer = csv.writer(response)
         writer.writerow(["id", "name", "num_supported_bills", "num_opposed_bills"])
 
-        for row in legislators:
-            writer.writerow((row["legislator"]["id"], row["legislator"]["name"], row["supported_bills"], row["opposed_bills"]))
+        for legislator in legislators:
+            writer.writerow((
+                legislator["id"],
+                legislator["name"],
+                legislator["num_supported_bills"],
+                legislator["num_opposed_bills"]
+            ))
 
         return response
 
