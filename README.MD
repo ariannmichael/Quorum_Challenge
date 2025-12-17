@@ -210,10 +210,28 @@ make docker-logs
 
 ## 🧪 Testing
 
-### Option 1: Using Makefile
+### Option 1: Using Makefile (Docker - Recommended)
+
+When using Docker, run tests inside the containers:
 
 ```bash
-# Run all tests
+# Run all tests in Docker
+make test-docker
+
+# Or run separately:
+make test-backend-docker
+make test-frontend-docker
+```
+
+### Option 2: Using Makefile (Local)
+
+For local testing, ensure dependencies are installed first:
+
+```bash
+# Install dependencies first (if not already done)
+make install
+
+# Run all tests locally
 make test
 
 # Or run separately:
@@ -221,9 +239,11 @@ make test-backend
 make test-frontend
 ```
 
-### Option 2: Manual
+**Note**: Local tests require the virtual environment to be set up. If you get dependency errors, run `make install-backend` first.
 
-#### Backend
+### Option 3: Manual
+
+#### Backend (Local)
 
 ```bash
 cd backend
@@ -231,18 +251,17 @@ source venv/bin/activate
 python manage.py test
 ```
 
+#### Backend (Docker)
+
+```bash
+docker-compose exec backend python manage.py test
+```
+
 #### Frontend
 
 ```bash
 cd frontend
 npm test
-```
-
-### Option 3: Docker
-
-```bash
-# Run backend tests in Docker
-docker-compose exec backend python manage.py test
 ```
 
 ## 🐳 Docker Setup
@@ -315,9 +334,13 @@ make migrate-docker
 | `make run` | Show instructions for running services |
 | `make run-backend` | Run backend server |
 | `make run-frontend` | Run frontend dev server |
-| `make test` | Run all tests |
-| `make test-backend` | Run backend tests |
-| `make test-frontend` | Run frontend tests |
+| `make test` | Run all tests (local, requires venv) |
+| `make test-backend` | Run backend tests (local, requires venv) |
+| `make test-frontend` | Run frontend tests (local) |
+| `make test-docker` | Run all tests in Docker |
+| `make test-backend-docker` | Run backend tests in Docker |
+| `make test-frontend-docker` | Run frontend tests in Docker |
+| `make test-all` | Alias for test-docker |
 | `make migrate` | Run database migrations |
 | `make migrate-docker` | Run migrations in Docker |
 | `make docker-build` | Build Docker images |

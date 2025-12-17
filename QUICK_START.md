@@ -42,7 +42,10 @@ make help
 # Install dependencies
 make install
 
-# Run tests
+# Run tests (Docker - recommended when using Docker)
+make test-docker
+
+# Or run tests locally (requires venv setup)
 make test
 
 # Docker operations

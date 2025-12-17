@@ -1,4 +1,4 @@
-.PHONY: help install install-backend install-frontend run run-backend run-frontend test test-backend test-frontend docker-build docker-up docker-down docker-logs clean
+.PHONY: help install install-backend install-frontend run run-backend run-frontend test test-backend test-frontend test-docker test-backend-docker test-frontend-docker docker-build docker-up docker-down docker-logs clean
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -38,17 +38,39 @@ run-frontend: ## Run frontend dev server
 	@echo "Starting frontend dev server..."
 	cd frontend && npm run dev
 
-test: test-backend test-frontend ## Run all tests
+test: test-backend test-frontend ## Run all tests (local)
 
-test-backend: ## Run backend tests
-	@echo "Running backend tests..."
+test-backend: ## Run backend tests (local, requires venv)
+	@echo "Running backend tests locally..."
+	@if [ ! -d "backend/venv" ]; then \
+		echo "Error: Virtual environment not found. Run 'make install-backend' first."; \
+		exit 1; \
+	fi
 	cd backend && \
 	. venv/bin/activate && \
 	python manage.py test
 
-test-frontend: ## Run frontend tests (if available)
-	@echo "Running frontend tests..."
-	cd frontend && npm test || echo "No tests configured"
+test-frontend: ## Run frontend tests (local, if available)
+	@echo "Running frontend tests locally..."
+	@cd frontend && npm test 2>/dev/null || echo "No tests configured"
+
+test-docker: test-backend-docker test-frontend-docker ## Run all tests in Docker
+
+test-backend-docker: ## Run backend tests in Docker
+	@echo "Running backend tests in Docker..."
+	@if ! docker-compose ps | grep -q "quorum_challenge_backend.*Up"; then \
+		echo "Error: Backend container is not running. Start it with 'make docker-up' first."; \
+		exit 1; \
+	fi
+	docker-compose exec backend python manage.py test
+
+test-frontend-docker: ## Run frontend tests in Docker (if available)
+	@echo "Running frontend tests in Docker..."
+	@if ! docker-compose ps | grep -q "quorum_challenge_frontend.*Up"; then \
+		echo "Error: Frontend container is not running. Start it with 'make docker-up' first."; \
+		exit 1; \
+	fi
+	@docker-compose exec frontend npm test 2>/dev/null || echo "Note: Frontend tests are not configured. Add a test framework (e.g., Vitest, Jest) to run tests."
 
 docker-build: ## Build Docker images
 	@echo "Building Docker images..."
@@ -91,4 +113,6 @@ setup-docker: docker-build docker-up ## Complete Docker setup (build + start)
 	@echo "Waiting for services to be ready..."
 	@sleep 5
 	@make migrate-docker
+
+test-all: test-docker ## Run all tests in Docker (alias for test-docker)
 
