@@ -1,31 +1,24 @@
-from django.db import migrations, connection
+from django.db import migrations, models
+import django.db.models.deletion
 
-def create_votes_table(apps, schema_editor):
-    """
-    Creates the votes table using raw SQL.
-    """
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            CREATE TABLE votes_vote (
-                id SERIAL PRIMARY KEY,
-                bill_id INTEGER NOT NULL,
-                CONSTRAINT fk_bill FOREIGN KEY (bill_id) REFERENCES bills_bill(id) ON DELETE CASCADE
-            );
-        """)
-
-def drop_votes_table(apps, schema_editor):
-    """
-    Drops the votes table if migration is rolled back.
-    """
-    with connection.cursor() as cursor:
-        cursor.execute("DROP TABLE IF EXISTS votes_vote;")
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
-        ('bills', '0001_create_bills_table'),  # Ensure 'bills' table exists first
+        ('bills', '0001_create_bills_table'),
     ]
 
     operations = [
-        migrations.RunPython(create_votes_table, drop_votes_table),
+        migrations.CreateModel(
+            name='Vote',
+            fields=[
+                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ('bill', models.ForeignKey(db_column='bill_id', on_delete=django.db.models.deletion.CASCADE, to='bills.bill')),
+            ],
+            options={
+                'db_table': 'votes_vote',
+            },
+        ),
     ]

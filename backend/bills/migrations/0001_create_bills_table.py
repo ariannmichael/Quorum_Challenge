@@ -1,25 +1,24 @@
-from django.db import migrations, connection
+from django.db import migrations, models
 
-def create_bills_table(apps, schema_editor):
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            CREATE TABLE bills_bill (
-                id SERIAL PRIMARY KEY,
-                title VARCHAR(500) NOT NULL,
-                primary_sponsor INTEGER
-            );
-        """)
-
-def drop_bills_table(apps, schema_editor):
-    with connection.cursor() as cursor:
-        cursor.execute("DROP TABLE IF EXISTS bills_bill;")
 
 class Migration(migrations.Migration):
+
+    initial = True
 
     dependencies = [
         ('legislators', '0001_create_legislators_table'),
     ]
 
     operations = [
-        migrations.RunPython(create_bills_table, drop_bills_table),
+        migrations.CreateModel(
+            name='Bill',
+            fields=[
+                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ('title', models.CharField(max_length=500)),
+                ('primary_sponsor', models.IntegerField(blank=True, null=True)),
+            ],
+            options={
+                'db_table': 'bills_bill',
+            },
+        ),
     ]

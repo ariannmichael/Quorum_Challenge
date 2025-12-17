@@ -6,3 +6,4 @@ urlpatterns = [
     path('import/', LegislatorVoteAnalyticsView.as_view()),
     path('export/', LegislatorAnalyticsExportCSV.as_view()),
 ]
+
