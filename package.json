@@ -1,0 +1,32 @@
+{
+  "name": "quorum-challenge-monorepo",
+  "version": "1.0.0",
+  "description": "Quorum Challenge - Full Stack Monorepo",
+  "private": true,
+  "scripts": {
+    "install": "make install",
+    "install:backend": "make install-backend",
+    "install:frontend": "make install-frontend",
+    "dev": "make run",
+    "dev:backend": "make run-backend",
+    "dev:frontend": "make run-frontend",
+    "test": "make test",
+    "test:backend": "make test-backend",
+    "test:frontend": "make test-frontend",
+    "docker:build": "make docker-build",
+    "docker:up": "make docker-up",
+    "docker:down": "make docker-down",
+    "docker:logs": "make docker-logs",
+    "migrate": "make migrate",
+    "clean": "make clean"
+  },
+  "keywords": [
+    "django",
+    "react",
+    "monorepo",
+    "quorum"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+

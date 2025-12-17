@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17.3-alpine
+    container_name: quorum_challenge_db
+    restart: always
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-quorum_db}
+      - POSTGRES_USER=${POSTGRES_USER:-quorum_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-quorum_password}
+    networks:
+      - quorum_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quorum_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: quorum_challenge_backend
+    restart: always
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      - DEBUG=${DEBUG:-True}
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-in-production}
+      - POSTGRES_DB=${POSTGRES_DB:-quorum_db}
+      - POSTGRES_USER=${POSTGRES_USER:-quorum_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-quorum_password}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    networks:
+      - quorum_network
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: quorum_challenge_frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    networks:
+      - quorum_network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  quorum_network:
+    driver: bridge
+
